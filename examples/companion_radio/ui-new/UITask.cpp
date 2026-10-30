@@ -88,6 +88,7 @@ public:
 
 class HomeScreen : public UIScreen {
   enum HomePage {
+    PACKETS,
     FIRST,
     RECENT,
     RADIO,
@@ -162,6 +163,24 @@ class HomeScreen : public UIScreen {
     int fillWidth = (batteryPercentage * (iconWidth - 4)) / 100;
     display.fillRect(iconX + 2, iconY + 2, fillWidth, iconHeight - 4);
 
+    // signal indicator: 3 bars (24x10) directly left of the battery, or an X at 0 bars
+    int sigX = iconX - 24 - 4;
+    {
+      uint8_t bars = _task->getSignalBars();
+      display.setColor(UIColor::title_txt);
+      if (bars == 0) {
+        display.drawXbm(sigX + 8, iconY + 1, no_signal_icon, 8, 8);
+      } else {
+        static const int barH[3] = {4, 7, 10};
+        for (int b = 0; b < 3; b++) {
+          int bx = sigX + b * 9;
+          int by = iconY + 10 - barH[b];
+          if (b < bars) display.fillRect(bx, by, 6, barH[b]);
+          else          display.drawRect(bx, by, 6, barH[b]);
+        }
+      }
+    }
+
     // while charging, show a bolt (or a plug once full) just left of the battery,
     // keeping the fill bar itself clean and uninterrupted
     bool charging = board.isExternalPowered();
@@ -171,7 +190,7 @@ class HomeScreen : public UIScreen {
       const int BATT_FULL_PCT = 95;
       const uint8_t* symbol = (batteryPercentage >= BATT_FULL_PCT) ? plug_icon : charging_icon;
       display.setColor(UIColor::title_txt);
-      display.drawXbm(iconX - 9, iconY + 1, symbol, 8, 8);
+      display.drawXbm(sigX - 9, iconY + 1, symbol, 8, 8);
     }
 
     // show muted icon if buzzer is muted (shifted further left when the charging
@@ -179,7 +198,7 @@ class HomeScreen : public UIScreen {
 #ifdef PIN_BUZZER
     if (_task->isBuzzerQuiet()) {
       display.setColor(UIColor::warning_txt);
-      display.drawXbm(iconX - (charging ? 18 : 9), iconY + 1, muted_icon, 8, 8);
+      display.drawXbm(sigX - (charging ? 18 : 9), iconY + 1, muted_icon, 8, 8);
     }
 #endif
 
@@ -315,7 +334,19 @@ public:
       }
     }
 
-    if (_page == HomePage::FIRST) {
+    if (_page == HomePage::PACKETS) {
+      display.setColor(UIColor::primary_txt);
+      display.setTextSize(1);
+      int y = 20;
+      for (int i = 0; i < UI_RX_HISTORY_SIZE && y + 8 <= display.height(); i++, y += 11) {
+        float snr, rssi;
+        if (!_task->getRxHistory(i, snr, rssi)) break;
+        snprintf(tmp, sizeof(tmp), "SNR %+.1f RSSI %d", snr, (int)(rssi >= 0 ? rssi + 0.5f : rssi - 0.5f));
+        display.setCursor(0, y);
+        display.print(tmp);
+      }
+      return 1000;   // live list: redraw every second while this page is open
+    } else if (_page == HomePage::FIRST) {
       display.setColor(UIColor::primary_txt);
       #ifdef ENABLE_WIFI_INTERFACE
       // smaller unread message ui for wifi variants
@@ -1201,4 +1232,33 @@ void UITask::toggleBuzzer() {
     showAlert(buzzer.isQuiet() ? "Buzzer: OFF" : "Buzzer: ON", 800);
     _next_refresh = 0;  // trigger refresh
   #endif
+}
+
+// --- SNR/RSSI history (records every received packet; never wakes the display) ---
+void UITask::onPacketRx(float snr, float rssi) {
+  _rx_snr[_rx_head] = snr;
+  _rx_rssi[_rx_head] = rssi;
+  _rx_head = (_rx_head + 1) % UI_RX_HISTORY_SIZE;
+  if (_rx_count < UI_RX_HISTORY_SIZE) _rx_count++;
+  _rx_last_ms = millis();
+}
+
+uint8_t UITask::getSignalBars() const {
+  if (_rx_count == 0) return 0;
+  if ((uint32_t)(millis() - _rx_last_ms) > SIGNAL_STALE_MILLIS) return 0;
+  float sum = 0;
+  for (int i = 0; i < _rx_count; i++) sum += _rx_snr[i];
+  float avg = sum / _rx_count;
+  if (avg > 5.0f) return 3;
+  if (avg > 0.0f) return 2;
+  if (avg > -5.0f) return 1;
+  return 0;
+}
+
+bool UITask::getRxHistory(int idx, float& snr, float& rssi) const {
+  if (idx < 0 || idx >= _rx_count) return false;
+  int slot = (_rx_head - 1 - idx + 2 * UI_RX_HISTORY_SIZE) % UI_RX_HISTORY_SIZE;
+  snr = _rx_snr[slot];
+  rssi = _rx_rssi[slot];
+  return true;
 }

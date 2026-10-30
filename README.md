@@ -1,3 +1,13 @@
+## T-Beam 1W RX Screen and Signal Bars (PowerSaving 18 fork)
+
+Changes in this fork (branch `rx-snr-screen-v18`, based on IoTThinks `PowerSaving-v18`), for the LilyGO T-Beam 1W BLE companion (`LilyGo_TBeam_1W_companion_radio_ble`):
+
+* **SNR/RSSI first screen**: a new first home page, shown at boot, listing the SNR and RSSI of the last received packets, one per line, newest at top (for example `SNR +7.5 RSSI -102`). It records every received packet, including duplicates and traffic not addressed to the node. It holds 8 entries in RAM, clears on reboot, and keeps collecting while the display is off without waking it. It redraws every second while open.
+* **3-bar signal indicator**: shown left of the battery icon, based on the average SNR of the last 8 packets (above +5 dB: 3 bars, above 0: 2, above -5: 1, otherwise a small X). It shows the X if no packet has been heard for 10 minutes (`SIGNAL_STALE_MILLIS`, overridable) or none has been heard yet. Charging and muted icons shift left to make room.
+* Patches are applied by `tools/apply_rx_screen_patch.py` then `tools/apply_signal_bar_patch.py`.
+
+Fresh-install binary: see the [v1.18.0-SIGNAL release](https://github.com/icedfiyah/MeshCore/releases/tag/v1.18.0-SIGNAL). Tested on a T-Beam 1W, 915 MHz. Flash the merged .bin at 0x0 after a full-chip erase; a fresh install erases contacts and keys.
+
 ## About MeshCore
 
 MeshCore is a lightweight, portable C++ library that enables multi-hop packet routing for embedded projects using LoRa and other packet radios. It is designed for developers who want to create resilient, decentralized communication networks that work without the internet.

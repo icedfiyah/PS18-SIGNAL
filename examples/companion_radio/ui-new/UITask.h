@@ -46,7 +46,20 @@ struct DiscoveredNode {
 };
 #endif
 
+#ifndef UI_RX_HISTORY_SIZE
+  #define UI_RX_HISTORY_SIZE 8
+#endif
+
+#ifndef SIGNAL_STALE_MILLIS
+  #define SIGNAL_STALE_MILLIS 600000UL   // no packet for 10 min -> 0 bars
+#endif
+
 class UITask : public AbstractUITask {
+  float _rx_snr[UI_RX_HISTORY_SIZE];
+  float _rx_rssi[UI_RX_HISTORY_SIZE];
+  int _rx_head = 0;    // next slot to write
+  int _rx_count = 0;   // valid entries
+  uint32_t _rx_last_ms = 0;  // millis() of last received packet
   DisplayDriver* _display;
   SensorManager* _sensors;
 #ifdef PIN_BUZZER
@@ -120,6 +133,10 @@ public:
   void onQueueSizeChanged(int offline_queue_size) override;
   void onDiscoveredContact(ContactInfo &contact, bool is_new, uint8_t path_len, const uint8_t* path) override;
   void onControlDataRecv(const mesh::Packet* pkt) override;
+  void onPacketRx(float snr, float rssi) override;
+  // idx 0 = newest. Returns false if no such entry.
+  bool getRxHistory(int idx, float& snr, float& rssi) const;
+  uint8_t getSignalBars() const;   // 0..3 from avg SNR of the RX history
 
   // from AbstractUITask
   void notify(UIEventType t = UIEventType::none) override;
