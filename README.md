@@ -1,3 +1,10 @@
+## Download
+
+* Release page: [v1.18.0-SIGNAL](https://github.com/icedfiyah/MeshCore/releases/tag/v1.18.0-SIGNAL)
+* Direct .bin: [LilyGo_TBeam_1W_companion_radio_ble-v1.18.0-rxscreen-sigbar-freshInstall-merged.bin](https://github.com/icedfiyah/MeshCore/raw/rx-snr-screen-v18/release/LilyGo_TBeam_1W_companion_radio_ble-v1.18.0-rxscreen-sigbar-freshInstall-merged.bin)
+* Hardware: LILYGO T-Beam 1W, BLE companion, 915 MHz
+* Warning: a fresh install erases contacts and keys. Export them first.
+
 ## T-Beam 1W RX Screen and Signal Bars (PowerSaving 18 fork)
 
 Changes in this fork (branch `rx-snr-screen-v18`, based on IoTThinks `PowerSaving-v18`), for the LilyGO T-Beam 1W BLE companion (`LilyGo_TBeam_1W_companion_radio_ble`):
