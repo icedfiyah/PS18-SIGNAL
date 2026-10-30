@@ -1,7 +1,7 @@
 ## Download
 
-* Release page: [v1.18.0-SIGNAL](https://github.com/icedfiyah/MeshCore/releases/tag/v1.18.0-SIGNAL)
-* Direct .bin: [LilyGo_TBeam_1W_companion_radio_ble-v1.18.0-rxscreen-sigbar-freshInstall-merged.bin](https://github.com/icedfiyah/MeshCore/raw/rx-snr-screen-v18/release/LilyGo_TBeam_1W_companion_radio_ble-v1.18.0-rxscreen-sigbar-freshInstall-merged.bin)
+* Release page: [v1.18.0-SIGNAL](https://github.com/icedfiyah/PS18-SIGNAL/releases/tag/v1.18.0-SIGNAL)
+* Direct .bin: [LilyGo_TBeam_1W_companion_radio_ble-v1.18.0-rxscreen-sigbar-freshInstall-merged.bin](https://github.com/icedfiyah/PS18-SIGNAL/raw/rx-snr-screen-v18/release/LilyGo_TBeam_1W_companion_radio_ble-v1.18.0-rxscreen-sigbar-freshInstall-merged.bin)
 * Hardware: LILYGO T-Beam 1W, BLE companion, 915 MHz
 * Warning: a fresh install erases contacts and keys. Export them first.
 
@@ -13,7 +13,7 @@ Changes in this fork (branch `rx-snr-screen-v18`, based on IoTThinks `PowerSavin
 * **3-bar signal indicator**: shown left of the battery icon, based on the average SNR of the last 8 packets (above +5 dB: 3 bars, above 0: 2, above -5: 1, otherwise a small X). It shows the X if no packet has been heard for 10 minutes (`SIGNAL_STALE_MILLIS`, overridable) or none has been heard yet. Charging and muted icons shift left to make room.
 * Patches are applied by `tools/apply_rx_screen_patch.py` then `tools/apply_signal_bar_patch.py`.
 
-Fresh-install binary: see the [v1.18.0-SIGNAL release](https://github.com/icedfiyah/MeshCore/releases/tag/v1.18.0-SIGNAL). Tested on a T-Beam 1W, 915 MHz. Flash the merged .bin at 0x0 after a full-chip erase; a fresh install erases contacts and keys.
+Fresh-install binary: see the [v1.18.0-SIGNAL release](https://github.com/icedfiyah/PS18-SIGNAL/releases/tag/v1.18.0-SIGNAL). Tested on a T-Beam 1W, 915 MHz. Flash the merged .bin at 0x0 after a full-chip erase; a fresh install erases contacts and keys.
 
 ## About MeshCore
 
