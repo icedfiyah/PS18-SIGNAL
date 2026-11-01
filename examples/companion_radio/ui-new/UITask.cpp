@@ -32,6 +32,7 @@
 #endif
 
 #include "icons.h"
+// PS18 header layout patch applied
 
 class SplashScreen : public UIScreen {
   UITask* _task;
@@ -147,7 +148,7 @@ class HomeScreen : public UIScreen {
     if (batteryPercentage > 100) batteryPercentage = 100; // Clamp to 100%
 
     // battery icon
-    int iconWidth = 24;
+    int iconWidth = 20;   // PS18 header layout: was 24
     int iconHeight = 10;
     int iconX = display.width() - iconWidth - 5; // Position the icon near the top-right corner
     int iconY = 0;
@@ -164,19 +165,18 @@ class HomeScreen : public UIScreen {
     display.fillRect(iconX + 2, iconY + 2, fillWidth, iconHeight - 4);
 
     // signal indicator: 3 bars (24x10) directly left of the battery, or an X at 0 bars
-    int sigX = iconX - 24 - 4;
+    int sigX = iconX - 21 - 4;   // 3 bars x 3 px at 9 px pitch
     {
       uint8_t bars = _task->getSignalBars();
       display.setColor(UIColor::title_txt);
       if (bars == 0) {
-        display.drawXbm(sigX + 8, iconY + 1, no_signal_icon, 8, 8);
+        display.drawXbm(sigX + 6, iconY + 1, no_signal_icon, 8, 8);
       } else {
         static const int barH[3] = {4, 7, 10};
         for (int b = 0; b < 3; b++) {
           int bx = sigX + b * 9;
           int by = iconY + 10 - barH[b];
-          if (b < bars) display.fillRect(bx, by, 6, barH[b]);
-          else          display.drawRect(bx, by, 6, barH[b]);
+          if (b < bars) display.fillRect(bx, by, 3, barH[b]);   // lit bars only
         }
       }
     }
@@ -224,8 +224,9 @@ class HomeScreen : public UIScreen {
 
     display.setTextSize(1);
     int uptimeWidth = display.getTextWidth(uptime);
-    int uptimeX = display.width() - uptimeWidth - 2;
-    int uptimeY = iconY + iconHeight + 1;
+    (void)uptimeWidth;
+    int uptimeX = 0;
+    int uptimeY = 2;
     display.setCursor(uptimeX, uptimeY);
     display.print(uptime);
   }
@@ -309,10 +310,6 @@ public:
     // node name
     display.setTextSize(1);
     display.setColor(UIColor::title_txt);
-    char filtered_name[sizeof(_node_prefs->node_name)];
-    display.translateUTF8ToBlocks(filtered_name, _node_prefs->node_name, sizeof(filtered_name));
-    display.setCursor(0, 2);
-    display.print(filtered_name);
 
     // battery voltage
     renderBatteryIndicator(display, _task->getBattMilliVolts());
@@ -325,8 +322,9 @@ public:
     }
     int y = 14;
     // PowerSaving variant
-    int x = 5;  // Left-aligned dots
-    for (uint8_t i = 0; i < HomePage::Count; i++, x += 10) {
+    // dots spread evenly across the width, 5 px side margins
+    for (uint8_t i = 0; i < HomePage::Count; i++) {
+      int x = 5 + (i * (display.width() - 12)) / (HomePage::Count - 1);
       if (i == _page) {
         display.fillRect(x-1, y-1, 4, 4);
       } else {

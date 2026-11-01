@@ -1,5 +1,6 @@
 ## Download
 
+* Latest (PS18.01-SIGNAL): [upgrade](https://github.com/icedfiyah/PS18-SIGNAL/raw/rx-snr-screen-v18/release/LilyGo_TBeam_1W_companion_radio_ble-PS18-SIGNAL-upgrade.bin), [fresh install](https://github.com/icedfiyah/PS18-SIGNAL/raw/rx-snr-screen-v18/release/LilyGo_TBeam_1W_companion_radio_ble-PS18-SIGNAL-freshInstall-merged.bin)
 * Release page: [v1.18.0-SIGNAL](https://github.com/icedfiyah/PS18-SIGNAL/releases/tag/v1.18.0-SIGNAL)
 * Direct .bin: [LilyGo_TBeam_1W_companion_radio_ble-v1.18.0-rxscreen-sigbar-freshInstall-merged.bin](https://github.com/icedfiyah/PS18-SIGNAL/raw/rx-snr-screen-v18/release/LilyGo_TBeam_1W_companion_radio_ble-v1.18.0-rxscreen-sigbar-freshInstall-merged.bin)
 * Hardware: LILYGO T-Beam 1W, BLE companion, 915 MHz
