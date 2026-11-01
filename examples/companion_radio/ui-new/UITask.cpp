@@ -165,16 +165,16 @@ class HomeScreen : public UIScreen {
     display.fillRect(iconX + 2, iconY + 2, fillWidth, iconHeight - 4);
 
     // signal indicator: 3 bars (24x10) directly left of the battery, or an X at 0 bars
-    int sigX = iconX - 21 - 4;   // 3 bars x 3 px at 9 px pitch
+    int sigX = iconX - 15 - 5;   // 3 bars x 3 px at 6 px pitch, 5 px gap to battery
     {
       uint8_t bars = _task->getSignalBars();
       display.setColor(UIColor::title_txt);
       if (bars == 0) {
-        display.drawXbm(sigX + 6, iconY + 1, no_signal_icon, 8, 8);
+        display.drawXbm(sigX + 3, iconY + 1, no_signal_icon, 8, 8);
       } else {
         static const int barH[3] = {4, 7, 10};
         for (int b = 0; b < 3; b++) {
-          int bx = sigX + b * 9;
+          int bx = sigX + b * 6;
           int by = iconY + 10 - barH[b];
           if (b < bars) display.fillRect(bx, by, 3, barH[b]);   // lit bars only
         }

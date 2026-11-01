@@ -1,3 +1,11 @@
+## PS18.02-SIGNAL
+
+- Version bumped to PS18.02.
+- Signal bar gaps reduced to 3 px (bars stay 3 px wide).
+- Spacing between the signal icon and the battery increased by 1 px (now 5 px).
+- Charging and mute icons shift right to close the freed space.
+- No other changes.
+
 ## PS18.01-SIGNAL
 
 - Battery body 24 -> 20 px wide.

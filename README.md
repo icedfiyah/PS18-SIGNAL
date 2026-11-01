@@ -1,9 +1,18 @@
 ## Download
 
-* Latest (PS18.01-SIGNAL): [upgrade](https://github.com/icedfiyah/PS18-SIGNAL/raw/rx-snr-screen-v18/release/LilyGo_TBeam_1W_companion_radio_ble-PS18-SIGNAL-upgrade.bin), [fresh install](https://github.com/icedfiyah/PS18-SIGNAL/raw/rx-snr-screen-v18/release/LilyGo_TBeam_1W_companion_radio_ble-PS18-SIGNAL-freshInstall-merged.bin)
-* Release page: [PS18.01-SIGNAL](https://github.com/icedfiyah/PS18-SIGNAL/releases/tag/PS18.01-SIGNAL)
+* Latest (PS18.02-SIGNAL): [upgrade](https://github.com/icedfiyah/PS18-SIGNAL/raw/rx-snr-screen-v18/release/LilyGo_TBeam_1W_companion_radio_ble-PS18-SIGNAL-upgrade.bin), [fresh install](https://github.com/icedfiyah/PS18-SIGNAL/raw/rx-snr-screen-v18/release/LilyGo_TBeam_1W_companion_radio_ble-PS18-SIGNAL-freshInstall-merged.bin)
+* Release page: [PS18.02-SIGNAL](https://github.com/icedfiyah/PS18-SIGNAL/releases/tag/PS18.02-SIGNAL)
+* Previous: [PS18.01-SIGNAL](https://github.com/icedfiyah/PS18-SIGNAL/releases/tag/PS18.01-SIGNAL)
 * Hardware: LILYGO T-Beam 1W, BLE companion, 915 MHz
 * Warning: a fresh install erases contacts and keys. Export them first.
+
+## New in PS18.02-SIGNAL
+
+- Version bumped to PS18.02.
+- Signal bar gaps reduced to 3 px (bars stay 3 px wide).
+- Spacing between the signal icon and the battery increased by 1 px (now 5 px).
+- Charging and mute icons shift right to close the freed space.
+- No other changes.
 
 ## T-Beam 1W RX Screen, Signal Bars and Header Layout (PowerSaving 18 fork)
 
