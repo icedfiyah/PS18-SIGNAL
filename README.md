@@ -1,19 +1,26 @@
 ## Download
 
 * Latest (PS18.01-SIGNAL): [upgrade](https://github.com/icedfiyah/PS18-SIGNAL/raw/rx-snr-screen-v18/release/LilyGo_TBeam_1W_companion_radio_ble-PS18-SIGNAL-upgrade.bin), [fresh install](https://github.com/icedfiyah/PS18-SIGNAL/raw/rx-snr-screen-v18/release/LilyGo_TBeam_1W_companion_radio_ble-PS18-SIGNAL-freshInstall-merged.bin)
-* Release page: [v1.18.0-SIGNAL](https://github.com/icedfiyah/PS18-SIGNAL/releases/tag/v1.18.0-SIGNAL)
-* Direct .bin: [LilyGo_TBeam_1W_companion_radio_ble-v1.18.0-rxscreen-sigbar-freshInstall-merged.bin](https://github.com/icedfiyah/PS18-SIGNAL/raw/rx-snr-screen-v18/release/LilyGo_TBeam_1W_companion_radio_ble-v1.18.0-rxscreen-sigbar-freshInstall-merged.bin)
+* Release page: [PS18.01-SIGNAL](https://github.com/icedfiyah/PS18-SIGNAL/releases/tag/PS18.01-SIGNAL)
 * Hardware: LILYGO T-Beam 1W, BLE companion, 915 MHz
 * Warning: a fresh install erases contacts and keys. Export them first.
 
-## T-Beam 1W RX Screen and Signal Bars (PowerSaving 18 fork)
+## T-Beam 1W RX Screen, Signal Bars and Header Layout (PowerSaving 18 fork)
 
 Changes in this fork (branch `rx-snr-screen-v18`, based on IoTThinks `PowerSaving-v18`), for the LilyGO T-Beam 1W BLE companion (`LilyGo_TBeam_1W_companion_radio_ble`):
 
 * **SNR/RSSI first screen**: a new first home page, shown at boot, listing the SNR and RSSI of the last received packets, one per line, newest at top (for example `SNR +7.5 RSSI -102`). It records every received packet, including duplicates and traffic not addressed to the node. It holds 8 entries in RAM, clears on reboot, and keeps collecting while the display is off without waking it. It redraws every second while open.
 * **3-bar signal indicator**: shown left of the battery icon, based on the average SNR of the last 8 packets (above +5 dB: 3 bars, above 0: 2, above -5: 1, otherwise a small X). It shows the X if no packet has been heard for 10 minutes (`SIGNAL_STALE_MILLIS`, overridable) or none has been heard yet. Charging and muted icons shift left to make room.
 
-Fresh-install binary: see the [v1.18.0-SIGNAL release](https://github.com/icedfiyah/PS18-SIGNAL/releases/tag/v1.18.0-SIGNAL). Tested on a T-Beam 1W, 915 MHz. Flash the merged .bin at 0x0 after a full-chip erase; a fresh install erases contacts and keys.
+### New in PS18.01-SIGNAL (status bar layout)
+
+* **Narrower signal bars**: each bar is now 3 px wide (was 6), with the same spacing and heights. Only the lit bars are drawn, and they are always filled. There are no hollow placeholder bars.
+* **Smaller battery icon**: the battery body is 20 px wide (was 24).
+* **Node name removed**: the status bar no longer shows the node name.
+* **Uptime moved**: the uptime now sits in the far top left of the status bar.
+* **Evenly spaced page dots**: the page indicator dots are spread evenly across the screen width, with 5 px margins at both ends.
+* The mute icon is unchanged.
+* These layout changes apply to every board that uses the `ui-new` companion UI, not only the T-Beam 1W.
 
 ## About MeshCore
 
