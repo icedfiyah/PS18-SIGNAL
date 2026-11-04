@@ -1,0 +1,71 @@
+name: Build MeshCore target
+run-name: Build ${{ inputs.env }} @ ${{ inputs.ref }}
+
+on:
+  workflow_dispatch:
+    inputs:
+      env:
+        description: PlatformIO env to build (e.g. Heltec_v3_repeater)
+        required: true
+      ref:
+        description: Branch or tag of IoTThinks/MeshCore to build
+        required: true
+      version:
+        description: Firmware version string (optional, defaults to the ref name)
+        required: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Validate inputs
+        env:
+          ENV_NAME: ${{ inputs.env }}
+          VERSION: ${{ inputs.version }}
+          REF: ${{ inputs.ref }}
+        run: |
+          [[ "$REF" =~ ^[A-Za-z0-9_./-]+$ ]] || { echo "Bad ref"; exit 1; }
+          [[ "$ENV_NAME" =~ ^[A-Za-z0-9_.-]+$ ]] || { echo "Bad env name"; exit 1; }
+          [[ -z "$VERSION" || "$VERSION" =~ ^[A-Za-z0-9_.-]+$ ]] || { echo "Bad version"; exit 1; }
+
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.ref }}
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - uses: actions/cache@v4
+        with:
+          path: ~/.platformio
+          key: pio-${{ inputs.ref }}-${{ inputs.env }}
+
+      - run: pip install platformio
+
+      - name: Version from last commit date
+        id: ver
+        env:
+          REF: ${{ inputs.ref }}
+          VERSION: ${{ inputs.version }}
+        run: |
+          # e.g. PowerSaving18.1030 for a last commit on 30 Oct 2026 (UTC)
+          DATE=$(TZ=UTC git log -1 --date=format-local:%m%d --format=%cd)
+          V="${VERSION:-$REF}"
+          # Remove slashes, and strip a hyphen followed by 'v' (e.g. -v18 -> 18)
+          CLEAN_V="${V//\//}"
+          CLEAN_V="${CLEAN_V/-v/}"
+          echo "version=${CLEAN_V}.${DATE}" >> "$GITHUB_OUTPUT"
+
+      - name: Build
+        env:
+          ENV_NAME: ${{ inputs.env }}
+          FIRMWARE_VERSION: ${{ steps.ver.outputs.version }}
+        run: bash build.sh build-firmware "$ENV_NAME"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ${{ inputs.env }}
+          path: out/*
+          retention-days: 30
+          if-no-files-found: error
